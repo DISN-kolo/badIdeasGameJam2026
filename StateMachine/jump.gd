@@ -7,7 +7,7 @@ extends State
 @export var idle_state: State
 
 func enter() -> void:
-	actor.velocity.y = controllers.jump_velocity;
+	actor.velocity.y = -controllers.jump_velocity;
 	super();
 
 var input_dir: float = 0.0;
@@ -23,14 +23,14 @@ func process_physics(delta: float) -> State:
 	actor.velocity.x = lerp(
 		actor.velocity.x,
 		temp_fullmultiplier,
-		3*delta);
+		8*delta);
 	actor.velocity.y -= Settings.gravity;
 	actor.move_and_slide();
 	
 	if !actor.is_on_floor() and actor.velocity.y < 0:
 		return fall_state;
 	if actor.is_on_floor():
-		if input_dir > 0.1:
+		if abs(input_dir) > 0.1:
 			return walk_state;
 		return idle_state;
 	return null;

@@ -27,12 +27,12 @@ func process_physics(delta: float) -> State:
 	actor.velocity.x = lerp(
 		actor.velocity.x,
 		temp_fullmultiplier,
-		8*delta);
+		16*delta);
 	actor.velocity.y -= Settings.gravity;
 	actor.move_and_slide();
 	
 	if !actor.is_on_floor():
 		return fall_state;
-	if input_dir < 0.1:
+	if abs(input_dir) < 0.1:
 		return idle_state;
 	return null;
