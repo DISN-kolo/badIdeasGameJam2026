@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://cwgplj2ag30b2" path="res://StateMachine/walk.gd" id="7_k12tt"]
 [ext_resource type="Script" uid="uid://c1r22winn0mns" path="res://StateMachine/jump.gd" id="8_h1bgf"]
 [ext_resource type="Script" uid="uid://bmlaq088u6jb2" path="res://StateMachine/fall.gd" id="9_b3802"]
+[ext_resource type="Script" uid="uid://o454qw6x4p82" path="res://StateMachine/pre_fall.gd" id="10_d1ilt"]
 [ext_resource type="TileSet" uid="uid://dxhsmdj620aia" path="res://Tilesets/base_tile_set.tres" id="10_fevyy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_761m8"]
@@ -38,17 +39,17 @@ script = ExtResource("4_fdnlq")
 script = ExtResource("5_jkdf5")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="PC/Controllers/StateMachine" unique_id=252941580 node_paths=PackedStringArray("controllers", "fall_state", "jump_state", "walk_state")]
+[node name="Idle" type="Node" parent="PC/Controllers/StateMachine" unique_id=252941580 node_paths=PackedStringArray("controllers", "pre_fall_state", "jump_state", "walk_state")]
 script = ExtResource("6_wsu2k")
 controllers = NodePath("../..")
-fall_state = NodePath("../Fall")
+pre_fall_state = NodePath("../PreFall")
 jump_state = NodePath("../Jump")
 walk_state = NodePath("../Walk")
 
-[node name="Walk" type="Node" parent="PC/Controllers/StateMachine" unique_id=640373514 node_paths=PackedStringArray("controllers", "fall_state", "jump_state", "idle_state")]
+[node name="Walk" type="Node" parent="PC/Controllers/StateMachine" unique_id=640373514 node_paths=PackedStringArray("controllers", "pre_fall_state", "jump_state", "idle_state")]
 script = ExtResource("7_k12tt")
 controllers = NodePath("../..")
-fall_state = NodePath("../Fall")
+pre_fall_state = NodePath("../PreFall")
 jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 
@@ -59,12 +60,25 @@ fall_state = NodePath("../Fall")
 walk_state = NodePath("../Walk")
 idle_state = NodePath("../Idle")
 
-[node name="Fall" type="Node" parent="PC/Controllers/StateMachine" unique_id=770040480 node_paths=PackedStringArray("controllers", "jump_state", "walk_state", "idle_state")]
+[node name="Fall" type="Node" parent="PC/Controllers/StateMachine" unique_id=770040480 node_paths=PackedStringArray("controllers", "walk_state", "idle_state")]
 script = ExtResource("9_b3802")
 controllers = NodePath("../..")
-jump_state = NodePath("../Jump")
 walk_state = NodePath("../Walk")
 idle_state = NodePath("../Idle")
+
+[node name="PreFall" type="Node" parent="PC/Controllers/StateMachine" unique_id=1321552872 node_paths=PackedStringArray("controllers", "jump_state", "idle_state", "walk_state", "fall_state")]
+script = ExtResource("10_d1ilt")
+controllers = NodePath("../..")
+jump_state = NodePath("../Jump")
+idle_state = NodePath("../Idle")
+walk_state = NodePath("../Walk")
+fall_state = NodePath("../Fall")
+
+[node name="PreFallTimer" type="Timer" parent="PC/Controllers" unique_id=1449133920]
+unique_name_in_owner = true
+process_callback = 0
+wait_time = 0.05
+one_shot = true
 
 [node name="TileControl" type="Node2D" parent="." unique_id=1334410635]
 position = Vector2(-1387, 5)
@@ -96,3 +110,5 @@ layout_mode = 0
 offset_top = 41.0
 offset_right = 40.0
 offset_bottom = 64.0
+
+[connection signal="timeout" from="PC/Controllers/PreFallTimer" to="PC/Controllers/StateMachine/PreFall" method="_on_pre_fall_timer_timeout"]

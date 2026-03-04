@@ -2,13 +2,26 @@ extends State
 
 @export var controllers: Node
 
-@export var walk_state: State
+@export var jump_state: State
 @export var idle_state: State
+@export var walk_state: State
+@export var fall_state: State
+
+@onready var pre_fall_timer: Timer = %"PreFallTimer"
+
+var prefall_ended : bool = false;
 
 func enter() -> void:
+	prefall_ended = false;
+	pre_fall_timer.start();
 	super();
 
 var input_dir: float = 0.0;
+
+func process_input(event: InputEvent) -> State:
+	if Input.is_action_just_pressed("jump"):
+		return jump_state;
+	return null
 
 func process_physics(delta: float) -> State:
 	input_dir = Input.get_vector("mov_left", "mov_right", "mov_up", "mov_down").x;
@@ -29,4 +42,10 @@ func process_physics(delta: float) -> State:
 		if abs(input_dir) > 0.1:
 			return walk_state;
 		return idle_state;
+	if (prefall_ended):
+		return fall_state;
 	return null;
+
+
+func _on_pre_fall_timer_timeout() -> void:
+	prefall_ended = true;

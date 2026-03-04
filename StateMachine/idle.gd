@@ -2,7 +2,7 @@ extends State
 
 @export var controllers: Node
 
-@export var fall_state: State
+@export var pre_fall_state: State
 @export var jump_state: State
 @export var walk_state: State
 
@@ -10,7 +10,7 @@ func enter() -> void:
 	super();
 
 func process_input(event: InputEvent) -> State:
-	if Input.is_action_just_pressed("jump") and actor.is_on_floor():
+	if Input.is_action_just_pressed("jump"):
 		return jump_state;
 	return null
 
@@ -24,5 +24,5 @@ func process_physics(delta: float) -> State:
 	actor.move_and_slide();
 	
 	if !actor.is_on_floor():
-		return fall_state;
+		return pre_fall_state;
 	return null;
