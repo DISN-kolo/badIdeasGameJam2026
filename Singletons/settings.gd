@@ -2,4 +2,6 @@ extends Node
 
 var debugmode : bool = true;
 var cameramovement : bool = false;
-var gravity : float = -40.0;
+## In a bizarre twist of fate, Y points downwards.
+var gravity : float = 40.0;
+var terminal_velocity : float = 1500.0;
